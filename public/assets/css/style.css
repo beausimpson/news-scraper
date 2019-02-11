@@ -1,7 +1,14 @@
 
-/* homepage */
-/* jumbotron */
-#homepage-jumbotron {
+h1 {
+    color: #cd0029;
+}
+
+.jumbotron {
     background-image: url("/assets/images/newspaper-homepage.jpg");
     background-size: cover;
+}
+
+/* note input */
+#bodyinput, #titleinput {
+    width: 100%;
 }

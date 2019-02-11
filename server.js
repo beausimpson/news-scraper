@@ -2,9 +2,8 @@
 // dependencies
 var express = require("express");
 var exphbs = require("express-handlebars");
+var logger = require("morgan");
 var mongoose = require("mongoose");
-var axios = require("axios");
-var cheerio = require("cheerio")
 
 // models
 var db = require("./models");
@@ -14,6 +13,9 @@ var PORT = 3000;
 
 // Initialize Express
 var app = express();
+
+// Use morgan logger for logging requests
+app.use(logger("dev"));
 
 // Parse request body as JSON
 app.use(express.urlencoded({ extended: true }));
@@ -31,7 +33,8 @@ var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
 
 // Routes
-require("./routes/htmlRoutes")(app);
+require("./routes/apiroutes")(app);
+require("./routes/htmlroutes")(app);
 
 // Start the server
 app.listen(PORT, function () {

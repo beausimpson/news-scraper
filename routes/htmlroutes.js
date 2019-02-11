@@ -10,10 +10,10 @@ module.exports = function (app) {
         res.render("index");
     });
 
-    // saved article page
     app.get("/saved", function (req, res) {
-        res.render("saved")
+        res.render("saved");
     });
+
 
     app.get("/scrape", function (req, res) {
         axios.get("http://www.echojs.com/").then(function (response) {
@@ -43,9 +43,79 @@ module.exports = function (app) {
         });
     });
 
+    // route for deleting all Articles from the db
+    app.get("/clear", function (req, res) {
+        db.Article.deleteMany({saved: false})
+            .then(function (dbArticle) {
+                res.redirect("/");
+            })
+            .catch(function (err) {
+                // If an error occurred, send it to the client
+                res.json(err);
+            });
+    });
+
+    app.post("/updatedarticles/:id", function (req, res) {
+        console.log(req.params.id)
+        db.Article.findOneAndUpdate({ _id: req.params.id }, { saved: true }, { new: true })
+            .then(function (dbArticle) {
+                console.log(dbArticle)
+                res.json(dbArticle)
+            })
+            .catch(function (err) {
+                // If an error occurred, send it to the client
+                res.json(err);
+            });
+
+
+    });
+
+    app.post("/savedarticles/:id", function (req, res) {
+
+        db.Article.findOneAndUpdate({ _id: req.params.id }, { saved: false }, { new: true })
+            .then(function (dbArticle) {
+                // console.log(dbArticle)
+                res.json(dbArticle)
+            })
+            .catch(function (err) {
+                // If an error occurred, send it to the client
+                res.json(err);
+            });
+    });
+
+    app.get("/articles/:id", function (req, res) {
+        db.Article.findOne({ _id: req.params.id })
+            .populate("note")
+            .then(function (dbArticle) {
+                res.json(dbArticle);
+            })
+            .catch(function (err) {
+                // If an error occurred, send it to the client
+                res.json(err);
+            });
+    });
+
+    // Route for saving/updating an Article's associated Note
+    app.post("/articles/:id", function (req, res) {
+
+        db.Note.create(req.body)
+            .then(function (dbNote) {
+
+                return db.Article.findOneAndUpdate({ _id: req.params.id }, { note: dbNote._id }, { new: true });
+            })
+            .then(function (dbArticle) {
+                res.json(dbArticle);
+            })
+            .catch(function (err) {
+                // If an error occurred, send it to the client
+                res.json(err);
+            });
+    });
+
     // 404 page
     app.get("*", function (req, res) {
         res.render("404");
     });
 
 };
+
