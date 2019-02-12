@@ -6,10 +6,10 @@ var logger = require("morgan");
 var mongoose = require("mongoose");
 
 // models
-// var db = require("./models");
+var db = require("./models");
 
 // Port
-var PORT = 3000;
+var PORT = process.env.PORT || 3000;
 
 // Initialize Express
 var app = express();
