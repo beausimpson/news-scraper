@@ -16,20 +16,27 @@ module.exports = function (app) {
 
 
     app.get("/scrape", function (req, res) {
-        axios.get("http://www.echojs.com/").then(function (response) {
+        axios.get("https://www.npr.org/").then(function (response) {
 
             var $ = cheerio.load(response.data);
 
-            $("article h2").each(function (i, element) {
+            $(".story-text").each(function (i, element) {
                 var result = {};
 
                 result.title = $(this)
-                    .children("a")
-                    .text();
+                .children("a")
+                .children("h3.title")
+                .text();
                 result.link = $(this)
-                    .children("a")
-                    .attr("href");
+                .children("a")
+                .attr("href");
+                result.summary = $(this)
+                .children("a")
+                .children("p.teaser")
+                .text();
 
+                // console.log(result.title, result.link, result.summary)
+                
                 db.Article.create(result)
                     .then(function (dbArticle) {
                         console.log(dbArticle);
@@ -45,7 +52,7 @@ module.exports = function (app) {
 
     // route for deleting all Articles from the db
     app.get("/clear", function (req, res) {
-        db.Article.deleteMany({saved: false})
+        db.Article.deleteMany({ saved: false })
             .then(function (dbArticle) {
                 res.redirect("/");
             })

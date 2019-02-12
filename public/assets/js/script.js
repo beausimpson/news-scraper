@@ -4,9 +4,11 @@ $.getJSON("/articles", function (data) {
     for (var i = 0; i < data.length; i++) {
         $("#scraped-articles").append(
             `<div class="card" data-id='${data[i]._id}' data-savedStatus="${data[i].saved}">
-                <h5 class="card-header">${data[i].title}</h5>
+                <a href="${data[i].link}" target="_blank">
+                    <h5 class="card-header">${data[i].title}</h5>
+                </a>
                 <div class="card-body">
-                    <a href="${data[i].link}"><p class="card-text">...Summary...</p></a>
+                    <p class="card-text">${data[i].summary}</p>
                     <button data-id='${data[i]._id}' class="btn btn-danger save">Save <i class="fas fa-bookmark"></i></button>
                 </div>
             </div>`
@@ -19,9 +21,11 @@ $.getJSON("/savedarticles", function (savedData) {
     for (var i = 0; i < savedData.length; i++) {
         $("#saved-articles").append(
             `<div class="card" data-id='${savedData[i]._id}'>
-                <h5 class="card-header">${savedData[i].title}</h5>
+                <a href="${savedData[i].link}" target="_blank">
+                    <h5 class="card-header">${savedData[i].title}</h5>
+                </a>
                 <div class="card-body">
-                    <a href="${savedData[i].link}"><p class="card-text">...Summary...</p></a>
+                    <p class="card-text">${savedData[i].summary}</p></a>
                     <button 
                     data-id='${savedData[i]._id}' class="btn btn-danger delete">Delete <i class="fas fa-trash-alt"></i></button>
                 </div>

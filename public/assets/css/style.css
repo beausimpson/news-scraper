@@ -8,6 +8,11 @@ h1 {
     background-size: cover;
 }
 
+.jumbotron-p {
+    color: #cd3e00;
+    font-size: 2em;
+}
+
 /* note input */
 #bodyinput, #titleinput {
     width: 100%;
